@@ -278,7 +278,7 @@ function spawnRocket() {
 
   const wrap = document.createElement('div');
   const dur = isMobile ? 5 + Math.random() * 4 : 4 + Math.random() * 3;
-  const startX = rect.left + 20 + Math.random() * (rect.width - 40);
+  const startX = 20 + Math.random() * (window.innerWidth - 40);
   Object.assign(wrap.style, {
     position: 'fixed',
     left: startX + 'px',
