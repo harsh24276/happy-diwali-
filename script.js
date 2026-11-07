@@ -334,6 +334,8 @@ function greet() {
   document.getElementById('typeMsg').textContent = '';
   document.getElementById('greeting').style.display = 'flex';
   document.getElementById('diya-section').style.display = 'flex';
+  localStorage.removeItem('deviceLit');
+  diyaLit = false;
   initDiya();
   typeWriter('displayName', name, 65);
   const msg = messages[Math.floor(Math.random() * messages.length)];
