@@ -182,7 +182,6 @@ canvas {
   text-decoration: none;
   animation: bounce 2s infinite;
 }
-
 @keyframes bounce {
   0%, 100% { transform: translateY(0); opacity: 0.5; }
   50%       { transform: translateY(6px); opacity: 1; }
@@ -192,16 +191,17 @@ canvas {
 .title-deco  { display: block; margin: 6px auto; max-width: 100%; }
 
 #greeting h1 {
-  font-size: clamp(1.8rem, 7vw, 4rem);
-  letter-spacing: clamp(2px, 2vw, 6px);
+  font-size: clamp(2rem, 8vw, 4.5rem);
+  letter-spacing: clamp(3px, 2vw, 8px);
   text-transform: uppercase;
-  background: linear-gradient(90deg, #c0392b, #f5a623, #ffd700, #f5a623, #c0392b);
+  background: linear-gradient(90deg, #c0392b, #f5a623, #ffd700, #fff8e1, #ffd700, #f5a623, #c0392b);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 4s linear infinite;
+  animation: shimmer 3s linear infinite;
   margin-bottom: 4px;
+  filter: drop-shadow(0 0 18px #ffd70066);
 }
 @keyframes shimmer {
   0%   { background-position: 0% 0%; }
@@ -209,23 +209,33 @@ canvas {
 }
 
 #greeting .name {
-  font-size: clamp(1.4rem, 6vw, 3rem);
+  font-size: clamp(1.6rem, 7vw, 3.5rem);
   color: #ffd700;
-  letter-spacing: clamp(2px, 2vw, 4px);
-  text-shadow: 0 0 24px #ffd70099, 0 0 50px #f5a62355;
+  letter-spacing: clamp(3px, 2vw, 6px);
+  text-shadow: 0 0 30px #ffd700cc, 0 0 60px #f5a62366, 0 0 90px #f5a62322;
   min-height: 1.3em;
   margin-top: 20px;
   margin-bottom: 4px;
+  animation: namePulse 2.5s ease-in-out infinite;
+}
+@keyframes namePulse {
+  0%, 100% { text-shadow: 0 0 30px #ffd700cc, 0 0 60px #f5a62366; }
+  50%       { text-shadow: 0 0 50px #ffd700ff, 0 0 90px #f5a623aa, 0 0 120px #f5a62344; }
 }
 
 #greeting .message {
   color: #ffc97a;
-  font-size: clamp(0.85rem, 3.5vw, 1.05rem);
-  line-height: 1.9;
-  max-width: 540px;
-  margin: 0 auto;
-  padding: 18px 20px;
-  letter-spacing: 0.3px;
+  font-size: clamp(0.88rem, 3.5vw, 1.05rem);
+  line-height: 2;
+  max-width: 520px;
+  margin: 16px auto 0;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(245,166,35,0.08), rgba(192,57,43,0.08));
+  border: 1px solid #f5a62322;
+  border-radius: 14px;
+  box-shadow: 0 0 30px #f5a62311, inset 0 0 20px rgba(245,166,35,0.03);
+  letter-spacing: 0.4px;
+  backdrop-filter: blur(2px);
 }
 
 /* ── Big Diya + Progress ── */
@@ -234,7 +244,7 @@ canvas {
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding: 60px 16px 80px;
   pointer-events: auto;
   min-height: 100vh;
@@ -242,55 +252,76 @@ canvas {
   background: transparent;
 }
 
-#progress-wrap { text-align: center; width: 100%; }
+#progress-wrap {
+  text-align: center;
+  width: 100%;
+  animation: fadeUp 0.6s ease both;
+}
 
 #progress-label {
-  color: #f5a62399;
-  font-size: 0.78rem;
-  letter-spacing: 2px;
+  color: #f5a623bb;
+  font-size: 0.82rem;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px #f5a62344;
 }
 #progress-label span {
   color: #ffd700;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  text-shadow: 0 0 10px #ffd700;
+  text-shadow: 0 0 16px #ffd700cc;
 }
 
 #progress-track {
-  width: min(320px, 90vw);
-  height: 10px;
-  background: rgba(245,166,35,0.12);
-  border-radius: 10px;
-  border: 1px solid #f5a62333;
+  width: min(340px, 88vw);
+  height: 12px;
+  background: rgba(245,166,35,0.08);
+  border-radius: 12px;
+  border: 1px solid #f5a62344;
   overflow: hidden;
   margin: 0 auto;
+  box-shadow: 0 0 12px #f5a62322;
 }
 #progress-bar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #c0392b, #f5a623, #ffd700);
-  border-radius: 10px;
-  transition: width 0.6s ease;
-  box-shadow: 0 0 10px #f5a623, 0 0 20px #f5a62366;
+  background: linear-gradient(90deg, #c0392b, #e67e22, #f5a623, #ffd700);
+  border-radius: 12px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 14px #f5a623, 0 0 28px #f5a62366, 0 0 4px #fff8e188;
 }
 
 #big-diya {
   cursor: pointer;
-  filter: drop-shadow(0 0 0px #f5a623);
-  transition: filter 0.4s ease, transform 0.2s ease;
+  filter: drop-shadow(0 0 4px #f5a62344);
+  transition: filter 0.5s ease, transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
+  animation: diyaFloat 3s ease-in-out infinite;
 }
-#big-diya:active { transform: scale(0.95); }
+@keyframes diyaFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+#big-diya:active { transform: scale(0.93) translateY(0); animation: none; }
 #big-diya.lit {
-  filter: drop-shadow(0 0 18px #ffd700) drop-shadow(0 0 36px #f5a62388);
+  filter: drop-shadow(0 0 24px #ffd700) drop-shadow(0 0 48px #f5a623aa) drop-shadow(0 0 80px #f5a62344);
+  animation: diyaFloatLit 3s ease-in-out infinite;
+}
+@keyframes diyaFloatLit {
+  0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 24px #ffd700) drop-shadow(0 0 48px #f5a623aa); }
+  50%       { transform: translateY(-8px); filter: drop-shadow(0 0 36px #ffd700) drop-shadow(0 0 70px #f5a623cc); }
 }
 
 #diya-hint {
-  color: #f5a62355;
+  color: #f5a62366;
   font-size: 0.72rem;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   transition: opacity 0.5s;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
 }

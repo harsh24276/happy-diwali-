@@ -66,6 +66,7 @@ function drawBg(ts) {
   });
 
   if (!isMobile) drawRangoli(bgCtx, W / 2, H - 220, 90, bgTick);
+  else drawRangoli(bgCtx, W / 2, H - 160, 60, bgTick);
 
   bgCtx.globalAlpha = 1;
   requestAnimationFrame(drawBg);
@@ -125,8 +126,8 @@ function makeBigDiya(lit) {
   const ns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
   svg.setAttribute('viewBox', '0 0 120 150');
-  svg.setAttribute('width', '120');
-  svg.setAttribute('height', '150');
+  svg.setAttribute('width', '200');
+  svg.setAttribute('height', '250');
 
   const bowl = document.createElementNS(ns, 'path');
   bowl.setAttribute('d', 'M18,84 Q60,114 102,84 L90,102 Q60,126 30,102 Z');
