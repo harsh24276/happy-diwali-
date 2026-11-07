@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Diwali</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <canvas id="bg"></canvas>
+  <canvas id="fireworks"></canvas>
+
+  <!-- Popup -->
+  <div id="popup">
+    <div class="popup-box">
+      <svg class="deco-top" viewBox="0 0 200 40" width="200">
+        <path d="M10,20 Q50,0 100,20 Q150,40 190,20" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+        <circle cx="10"  cy="20" r="3" fill="#f5a623"/>
+        <circle cx="100" cy="20" r="4" fill="#ffd700"/>
+        <circle cx="190" cy="20" r="3" fill="#f5a623"/>
+        <circle cx="55"  cy="8"  r="2" fill="#ff6b6b"/>
+        <circle cx="145" cy="32" r="2" fill="#ff6b6b"/>
+      </svg>
+      <h2>Happy Diwali</h2>
+      <p>Enter your name to receive your greeting</p>
+      <input type="text" id="nameInput" placeholder="Your name..." maxlength="30" autofocus/>
+      <button onclick="greet()">Light the Diya</button>
+      <svg class="deco-top" viewBox="0 0 200 40" width="200" style="transform:scaleY(-1)">
+        <path d="M10,20 Q50,0 100,20 Q150,40 190,20" fill="none" stroke="#f5a623" stroke-width="1.5"/>
+        <circle cx="10"  cy="20" r="3" fill="#f5a623"/>
+        <circle cx="100" cy="20" r="4" fill="#ffd700"/>
+        <circle cx="190" cy="20" r="3" fill="#f5a623"/>
+        <circle cx="55"  cy="8"  r="2" fill="#ff6b6b"/>
+        <circle cx="145" cy="32" r="2" fill="#ff6b6b"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Greeting + Diya in scroll flow -->
+  <div id="page">
+
+    <!-- Greeting -->
+    <div id="greeting">
+      <div class="title-wrap">
+        <svg class="title-deco" viewBox="0 0 320 20" width="280">
+          <line x1="0" y1="10" x2="110" y2="10" stroke="#f5a62366" stroke-width="1"/>
+          <circle cx="120" cy="10" r="3" fill="#f5a623"/>
+          <circle cx="135" cy="10" r="5" fill="#ffd700"/>
+          <circle cx="150" cy="10" r="3" fill="#f5a623"/>
+          <line x1="160" y1="10" x2="320" y2="10" stroke="#f5a62366" stroke-width="1"/>
+        </svg>
+        <h1>Happy Diwali</h1>
+        <div class="name" id="displayName"></div>
+        <svg class="title-deco" viewBox="0 0 320 20" width="280">
+          <line x1="0" y1="10" x2="110" y2="10" stroke="#f5a62366" stroke-width="1"/>
+          <circle cx="120" cy="10" r="3" fill="#f5a623"/>
+          <circle cx="135" cy="10" r="5" fill="#ffd700"/>
+          <circle cx="150" cy="10" r="3" fill="#f5a623"/>
+          <line x1="160" y1="10" x2="320" y2="10" stroke="#f5a62366" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="message" id="typeMsg"></div>
+      <a href="#diya-section" class="scroll-hint">Scroll to light your Diya</a>
+    </div>
+
+    <!-- Big Diya + Progress -->
+    <div id="diya-section">
+      <div id="progress-wrap">
+        <div id="progress-label"><span id="lit-count">0</span> / 360 diyas lit</div>
+        <div id="progress-track">
+          <div id="progress-bar"></div>
+        </div>
+      </div>
+      <div id="big-diya"></div>
+      <div id="diya-hint">Tap the diya to light it</div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
