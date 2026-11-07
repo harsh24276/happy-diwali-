@@ -1,4 +1,4 @@
-// ── Mobile detection ─────────────────────────────────────────
+// ── Mobile detection ──────────────────────────────────────────
 const isMobile = /Mobi|Android/i.test(navigator.userAgent) || innerWidth < 600;
 
 // ── Cursor ────────────────────────────────────────────────────
@@ -50,13 +50,12 @@ const stars = Array.from({length: starCount}, () => ({
 let bgTick = 0;
 let lastBgFrame = 0;
 function drawBg(ts) {
-  if (isMobile && ts - lastBgFrame < 50) { requestAnimationFrame(drawBg); return; } // 20fps on mobile
+  if (isMobile && ts - lastBgFrame < 50) { requestAnimationFrame(drawBg); return; }
   lastBgFrame = ts;
   const W = bgCanvas.width, H = bgCanvas.height;
   bgCtx.clearRect(0, 0, W, H);
   bgTick += isMobile ? 0.04 : 0.02;
 
-  // Stars
   stars.forEach(s => {
     const alpha = s.a * (0.6 + 0.4 * Math.sin(bgTick * s.speed * 60 + s.phase));
     bgCtx.globalAlpha = alpha;
@@ -66,22 +65,18 @@ function drawBg(ts) {
     bgCtx.fill();
   });
 
-  // Rangoli at center-bottom
-  drawRangoli(bgCtx, W / 2, H - 220, 90, bgTick);
+  if (!isMobile) drawRangoli(bgCtx, W / 2, H - 220, 90, bgTick);
 
   bgCtx.globalAlpha = 1;
   requestAnimationFrame(drawBg);
 }
 
 function drawRangoli(ctx, cx, cy, r, t) {
-  if (isMobile) return; // skip rangoli on mobile
   const petalColors = ['#f5a623','#ff6b6b','#ffd700','#e91e8c','#54a0ff','#00d2d3'];
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(t * 0.3);
   ctx.globalAlpha = 0.22;
-
-  // Outer petals
   for (let i = 0; i < 12; i++) {
     ctx.save();
     ctx.rotate((Math.PI * 2 / 12) * i);
@@ -91,8 +86,6 @@ function drawRangoli(ctx, cx, cy, r, t) {
     ctx.fill();
     ctx.restore();
   }
-
-  // Inner petals
   ctx.rotate(Math.PI / 8);
   for (let i = 0; i < 8; i++) {
     ctx.save();
@@ -103,8 +96,6 @@ function drawRangoli(ctx, cx, cy, r, t) {
     ctx.fill();
     ctx.restore();
   }
-
-  // Rings
   [0.55, 0.82, 1.0].forEach((scale, idx) => {
     ctx.globalAlpha = 0.18 - idx * 0.04;
     ctx.strokeStyle = idx === 1 ? '#ff6b6b' : '#f5a623';
@@ -113,25 +104,21 @@ function drawRangoli(ctx, cx, cy, r, t) {
     ctx.arc(0, 0, r * scale, 0, Math.PI * 2);
     ctx.stroke();
   });
-
-  // Center dot
   ctx.globalAlpha = 0.35;
   ctx.fillStyle = '#ffd700';
   ctx.beginPath();
   ctx.arc(0, 0, r * 0.08, 0, Math.PI * 2);
   ctx.fill();
-
   ctx.restore();
 }
 
 resizeBg();
 window.addEventListener('resize', resizeBg);
 
-// ── Big Diya + Progress Bar ─────────────────────────────────────────
+// ── Big Diya + Progress Bar ───────────────────────────────────
 const TOTAL = 360;
-let litCount = parseInt(localStorage.getItem('diyaCount') || '0');
+let litCount = 0;
 localStorage.setItem('diyaCount', '0');
-litCount = 0;
 let diyaLit = false;
 
 function makeBigDiya(lit) {
@@ -141,38 +128,30 @@ function makeBigDiya(lit) {
   svg.setAttribute('width', '120');
   svg.setAttribute('height', '150');
 
-  // Bowl
   const bowl = document.createElementNS(ns, 'path');
   bowl.setAttribute('d', 'M18,84 Q60,114 102,84 L90,102 Q60,126 30,102 Z');
   bowl.setAttribute('fill', lit ? '#c0392b' : '#4a1a00');
-  bowl.setAttribute('id', 'bd-bowl');
   svg.appendChild(bowl);
 
-  // Bowl shine
   const shine = document.createElementNS(ns, 'ellipse');
   shine.setAttribute('cx', '60'); shine.setAttribute('cy', '90');
   shine.setAttribute('rx', '30'); shine.setAttribute('ry', '8');
   shine.setAttribute('fill', lit ? '#e74c3c' : '#6b2800');
   shine.setAttribute('opacity', '0.5');
-  shine.setAttribute('id', 'bd-shine');
   svg.appendChild(shine);
 
-  // Wick
   const wick = document.createElementNS(ns, 'line');
   wick.setAttribute('x1', '60'); wick.setAttribute('y1', '84');
   wick.setAttribute('x2', '60'); wick.setAttribute('y2', '66');
   wick.setAttribute('stroke', lit ? '#7f4f00' : '#3a2800');
   wick.setAttribute('stroke-width', '3');
-  wick.setAttribute('id', 'bd-wick');
   svg.appendChild(wick);
 
-  // Outer flame
   const flameOuter = document.createElementNS(ns, 'ellipse');
   flameOuter.setAttribute('cx', '60'); flameOuter.setAttribute('cy', '48');
   flameOuter.setAttribute('rx', '15'); flameOuter.setAttribute('ry', '24');
   flameOuter.setAttribute('fill', '#f5a623');
   flameOuter.setAttribute('opacity', lit ? '1' : '0');
-  flameOuter.setAttribute('id', 'bd-flame-outer');
   const animO = document.createElementNS(ns, 'animateTransform');
   animO.setAttribute('attributeName', 'transform'); animO.setAttribute('type', 'scale');
   animO.setAttribute('values', '1 1;1.1 0.92;0.93 1.08;1 1');
@@ -181,31 +160,25 @@ function makeBigDiya(lit) {
   flameOuter.appendChild(animO);
   svg.appendChild(flameOuter);
 
-  // Mid flame
   const flameMid = document.createElementNS(ns, 'ellipse');
   flameMid.setAttribute('cx', '60'); flameMid.setAttribute('cy', '50');
   flameMid.setAttribute('rx', '9'); flameMid.setAttribute('ry', '18');
   flameMid.setAttribute('fill', '#ffb347');
   flameMid.setAttribute('opacity', lit ? '1' : '0');
-  flameMid.setAttribute('id', 'bd-flame-mid');
   svg.appendChild(flameMid);
 
-  // Inner flame
   const flameInner = document.createElementNS(ns, 'ellipse');
   flameInner.setAttribute('cx', '60'); flameInner.setAttribute('cy', '54');
   flameInner.setAttribute('rx', '5'); flameInner.setAttribute('ry', '12');
   flameInner.setAttribute('fill', '#fff8e1');
   flameInner.setAttribute('opacity', lit ? '1' : '0');
-  flameInner.setAttribute('id', 'bd-flame-inner');
   svg.appendChild(flameInner);
 
-  // Glow
   const glow = document.createElementNS(ns, 'ellipse');
   glow.setAttribute('cx', '60'); glow.setAttribute('cy', '48');
   glow.setAttribute('rx', '26'); glow.setAttribute('ry', '30');
   glow.setAttribute('fill', '#f5a623');
   glow.setAttribute('opacity', lit ? '0.15' : '0');
-  glow.setAttribute('id', 'bd-glow');
   const animG = document.createElementNS(ns, 'animate');
   animG.setAttribute('attributeName', 'opacity');
   animG.setAttribute('values', '0.15;0.28;0.08;0.15');
@@ -231,14 +204,13 @@ function updateProgress() {
   document.getElementById('lit-count').textContent = litCount;
 }
 
-// Init deferred — called after greet()
 function initDiya() {
   setDiyaLit(false);
   updateProgress();
 }
 
 document.getElementById('big-diya').addEventListener('click', () => {
-  if (diyaLit) return; // already lit by this user, do nothing
+  if (diyaLit) return;
   litCount = Math.min(litCount + 1, TOTAL);
   localStorage.setItem('diyaCount', litCount);
   setDiyaLit(true);
@@ -247,81 +219,90 @@ document.getElementById('big-diya').addEventListener('click', () => {
   if (!animating) { animating = true; animateFw(); }
 });
 
-// ── Floating SVG lanterns ─────────────────────────────────────
-function makeLanternSVG() {
+// ── Rocket Crackers ───────────────────────────────────────────
+function makeRocketSVG() {
   const ns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('viewBox', '0 0 30 44');
-  svg.setAttribute('width', '28'); svg.setAttribute('height', '42');
+  svg.setAttribute('viewBox', '0 0 20 48');
+  svg.setAttribute('width', '20');
+  svg.setAttribute('height', '48');
+  const color = Math.random() > 0.5 ? '#c0392b' : '#8e1a00';
 
-  // String top
-  const str = document.createElementNS(ns, 'line');
-  str.setAttribute('x1','15'); str.setAttribute('y1','0');
-  str.setAttribute('x2','15'); str.setAttribute('y2','6');
-  str.setAttribute('stroke','#f5a62388'); str.setAttribute('stroke-width','1');
-  svg.appendChild(str);
-
-  // Body
   const body = document.createElementNS(ns, 'rect');
-  body.setAttribute('x','5'); body.setAttribute('y','6');
-  body.setAttribute('width','20'); body.setAttribute('height','28');
-  body.setAttribute('rx','4');
-  body.setAttribute('fill', Math.random() > 0.5 ? '#c0392b' : '#8e1a00');
+  body.setAttribute('x','5'); body.setAttribute('y','14');
+  body.setAttribute('width','10'); body.setAttribute('height','22');
+  body.setAttribute('rx','2'); body.setAttribute('fill', color);
   svg.appendChild(body);
 
-  // Glow inside
-  const inner = document.createElementNS(ns, 'rect');
-  inner.setAttribute('x','8'); inner.setAttribute('y','9');
-  inner.setAttribute('width','14'); inner.setAttribute('height','22');
-  inner.setAttribute('rx','3'); inner.setAttribute('fill','#ffd700');
-  inner.setAttribute('opacity','0.25');
-  const anim = document.createElementNS(ns, 'animate');
-  anim.setAttribute('attributeName','opacity');
-  anim.setAttribute('values','0.25;0.45;0.15;0.25');
-  anim.setAttribute('dur', (1.2 + Math.random()).toFixed(1) + 's');
-  anim.setAttribute('repeatCount','indefinite');
-  inner.appendChild(anim);
-  svg.appendChild(inner);
+  const nose = document.createElementNS(ns, 'polygon');
+  nose.setAttribute('points','10,2 5,14 15,14');
+  nose.setAttribute('fill','#ffd700');
+  svg.appendChild(nose);
 
-  // Tassel
-  const tassel = document.createElementNS(ns, 'line');
-  tassel.setAttribute('x1','15'); tassel.setAttribute('y1','34');
-  tassel.setAttribute('x2','15'); tassel.setAttribute('y2','44');
-  tassel.setAttribute('stroke','#f5a623'); tassel.setAttribute('stroke-width','1.5');
-  svg.appendChild(tassel);
+  const finL = document.createElementNS(ns, 'polygon');
+  finL.setAttribute('points','5,28 0,38 5,36');
+  finL.setAttribute('fill','#f5a623');
+  svg.appendChild(finL);
+
+  const finR = document.createElementNS(ns, 'polygon');
+  finR.setAttribute('points','15,28 20,38 15,36');
+  finR.setAttribute('fill','#f5a623');
+  svg.appendChild(finR);
+
+  const flame = document.createElementNS(ns, 'ellipse');
+  flame.setAttribute('cx','10'); flame.setAttribute('cy','40');
+  flame.setAttribute('rx','3'); flame.setAttribute('ry','6');
+  flame.setAttribute('fill','#f5a623'); flame.setAttribute('opacity','0.8');
+  const animF = document.createElementNS(ns, 'animate');
+  animF.setAttribute('attributeName','opacity');
+  animF.setAttribute('values','0.8;0.2;0.8');
+  animF.setAttribute('dur','0.3s');
+  animF.setAttribute('repeatCount','indefinite');
+  flame.appendChild(animF);
+  svg.appendChild(flame);
+
+  const stick = document.createElementNS(ns, 'line');
+  stick.setAttribute('x1','10'); stick.setAttribute('y1','36');
+  stick.setAttribute('x2','10'); stick.setAttribute('y2','48');
+  stick.setAttribute('stroke','#7f4f00'); stick.setAttribute('stroke-width','1.5');
+  svg.appendChild(stick);
 
   return svg;
 }
 
-function spawnLantern() {
+function spawnRocket() {
   const wrap = document.createElement('div');
-  const dur = 8 + Math.random() * 7;
+  const dur = isMobile ? 5 + Math.random() * 4 : 4 + Math.random() * 3;
   Object.assign(wrap.style, {
     position: 'fixed',
-    left: (4 + Math.random() * 88) + 'vw',
+    left: (5 + Math.random() * 85) + 'vw',
     bottom: '-60px',
-    zIndex: '2',
-    pointerEvents: 'none',
-    opacity: '0.85',
-    animation: `floatUp ${dur}s linear forwards`,
+    zIndex: '4',
+    pointerEvents: 'auto',
+    cursor: 'pointer',
+    animation: `rocketUp ${dur}s linear forwards`,
   });
-  wrap.appendChild(makeLanternSVG());
+  wrap.appendChild(makeRocketSVG());
   document.body.appendChild(wrap);
+  wrap.addEventListener('click', () => {
+    const rect = wrap.getBoundingClientRect();
+    explode(rect.left + rect.width / 2, rect.top + rect.height / 2, isMobile ? 40 : 80);
+    if (!animating) { animating = true; animateFw(); }
+    wrap.remove();
+  });
   setTimeout(() => wrap.remove(), dur * 1000);
 }
 
-// Inject floatUp keyframe once
 const kf = document.createElement('style');
-kf.textContent = `
-  @keyframes floatUp {
-    0%   { transform: translateY(0)      rotate(-6deg); opacity: 0.85; }
-    40%  { transform: translateY(-38vh)  rotate(6deg);  opacity: 0.7;  }
-    100% { transform: translateY(-105vh) rotate(-4deg); opacity: 0;    }
-  }`;
+kf.textContent = `@keyframes rocketUp {
+  0%   { transform: translateY(0) rotate(-3deg); opacity: 1; }
+  50%  { transform: translateY(-50vh) rotate(3deg); opacity: 1; }
+  100% { transform: translateY(-110vh) rotate(-2deg); opacity: 0; }
+}`;
 document.head.appendChild(kf);
 
-setInterval(spawnLantern, isMobile ? 6000 : 2000);
-if (!isMobile) spawnLantern();
+setInterval(spawnRocket, isMobile ? 3000 : 1800);
+spawnRocket();
 
 // ── Popup / Greet ─────────────────────────────────────────────
 let userName = '';
@@ -369,7 +350,6 @@ function typeWriter(id, text, speed) {
   }, speed);
 }
 
-
 // ── Fireworks ─────────────────────────────────────────────────
 const fwCanvas = document.getElementById('fireworks');
 const fwCtx    = fwCanvas.getContext('2d');
@@ -399,23 +379,10 @@ function explode(x, y, count) {
   }
 }
 
-function drawStar(ctx, x, y, r) {
-  ctx.beginPath();
-  for (let i = 0; i < 5; i++) {
-    const a = (Math.PI * 2 / 5) * i - Math.PI / 2;
-    const b = a + Math.PI / 5;
-    ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
-    ctx.lineTo(x + Math.cos(b) * r * 0.45, y + Math.sin(b) * r * 0.45);
-  }
-  ctx.closePath();
-  ctx.fill();
-}
-
 function animateFw() {
   if (!animating) return;
   fwCtx.fillStyle = 'rgba(10,0,5,0.18)';
   fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
-
   particles = particles.filter(p => p.alpha > 0.02);
   particles.forEach(p => {
     if (!isMobile) {
