@@ -271,23 +271,28 @@ function makeRocketSVG() {
 }
 
 function spawnRocket() {
+  const diyaSection = document.getElementById('diya-section');
+  if (!diyaSection || diyaSection.style.display === 'none') return;
+  const rect = diyaSection.getBoundingClientRect();
+  if (rect.top > window.innerHeight) return; // not visible yet
+
   const wrap = document.createElement('div');
   const dur = isMobile ? 5 + Math.random() * 4 : 4 + Math.random() * 3;
+  const startX = rect.left + 20 + Math.random() * (rect.width - 40);
   Object.assign(wrap.style, {
     position: 'fixed',
-    left: (10 + Math.random() * 80) + 'vw',
+    left: startX + 'px',
     bottom: '0px',
-    zIndex: '4',
+    zIndex: '6',
     pointerEvents: 'auto',
     cursor: 'pointer',
     animation: `rocketUp ${dur}s linear forwards`,
-    transformOrigin: 'bottom center',
   });
   wrap.appendChild(makeRocketSVG());
   document.body.appendChild(wrap);
   wrap.addEventListener('click', () => {
-    const rect = wrap.getBoundingClientRect();
-    explode(rect.left + rect.width / 2, rect.top + rect.height / 2, isMobile ? 40 : 80);
+    const r = wrap.getBoundingClientRect();
+    explode(r.left + r.width / 2, r.top + r.height / 2, isMobile ? 40 : 80);
     if (!animating) { animating = true; animateFw(); }
     wrap.remove();
   });
@@ -303,8 +308,7 @@ kf.textContent = `@keyframes rocketUp {
 document.head.appendChild(kf);
 
 setInterval(spawnRocket, isMobile ? 3000 : 1800);
-spawnRocket();
-spawnRocket();
+// Don't spawn on load — wait for diya section to be visible
 
 // ── Popup / Greet ─────────────────────────────────────────────
 let userName = '';
