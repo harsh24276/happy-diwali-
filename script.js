@@ -275,12 +275,13 @@ function spawnRocket() {
   const dur = isMobile ? 5 + Math.random() * 4 : 4 + Math.random() * 3;
   Object.assign(wrap.style, {
     position: 'fixed',
-    left: (5 + Math.random() * 85) + 'vw',
-    bottom: '-60px',
+    left: (10 + Math.random() * 80) + 'vw',
+    bottom: '0px',
     zIndex: '4',
     pointerEvents: 'auto',
     cursor: 'pointer',
     animation: `rocketUp ${dur}s linear forwards`,
+    transformOrigin: 'bottom center',
   });
   wrap.appendChild(makeRocketSVG());
   document.body.appendChild(wrap);
@@ -296,12 +297,13 @@ function spawnRocket() {
 const kf = document.createElement('style');
 kf.textContent = `@keyframes rocketUp {
   0%   { transform: translateY(0) rotate(-3deg); opacity: 1; }
-  50%  { transform: translateY(-50vh) rotate(3deg); opacity: 1; }
-  100% { transform: translateY(-110vh) rotate(-2deg); opacity: 0; }
+  50%  { transform: translateY(-55vh) rotate(3deg); opacity: 1; }
+  100% { transform: translateY(-115vh) rotate(-2deg); opacity: 0; }
 }`;
 document.head.appendChild(kf);
 
 setInterval(spawnRocket, isMobile ? 3000 : 1800);
+spawnRocket();
 spawnRocket();
 
 // ── Popup / Greet ─────────────────────────────────────────────
