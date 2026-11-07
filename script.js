@@ -274,7 +274,7 @@ function spawnRocket() {
   const diyaSection = document.getElementById('diya-section');
   if (!diyaSection || diyaSection.style.display === 'none') return;
   const rect = diyaSection.getBoundingClientRect();
-  if (rect.top > window.innerHeight) return; // not visible yet
+  if (rect.top > window.innerHeight * 0.5) return; // spawn only when diya section is mostly visible
 
   const wrap = document.createElement('div');
   const dur = isMobile ? 5 + Math.random() * 4 : 4 + Math.random() * 3;
