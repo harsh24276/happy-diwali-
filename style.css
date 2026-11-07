@@ -1,9 +1,13 @@
-html { scroll-behavior: smooth; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  background: #0a0005;
+}
 
 body {
   min-height: 100vh;
-  background: radial-gradient(ellipse at 50% 60%, #1a0010 0%, #0a0005 70%);
-  background-attachment: fixed;
+  background: #0a0005;
   font-family: Georgia, 'Times New Roman', serif;
   overflow-x: hidden;
   overflow-y: auto;
@@ -17,10 +21,10 @@ canvas {
   pointer-events: none;
 }
 
-#bg       { z-index: 0; }
+#bg        { z-index: 0; }
 #fireworks { z-index: 1; }
 
-/* ── Cursor (hidden on touch) ── */
+/* ── Cursor ── */
 #cursor {
   position: fixed;
   width: 14px; height: 14px;
@@ -40,8 +44,6 @@ canvas {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  padding: 40px 16px 60px;
 }
 
 /* ── Popup ── */
@@ -158,12 +160,18 @@ canvas {
   min-height: 100vh;
   display: none;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 16px 16px 20px;
+  padding: 40px 16px 40px;
   animation: fadeUp 0.8s ease both;
 }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .scroll-hint {
   display: inline-block;
   margin-top: 28px;
@@ -185,9 +193,6 @@ canvas {
 @keyframes bounce {
   0%, 100% { transform: translateY(0); opacity: 0.5; }
   50%       { transform: translateY(6px); opacity: 1; }
-}
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 .title-wrap { margin-bottom: 20px; }
@@ -216,7 +221,7 @@ canvas {
   letter-spacing: clamp(2px, 2vw, 4px);
   text-shadow: 0 0 24px #ffd70099, 0 0 50px #f5a62355;
   min-height: 1.3em;
-  margin-top: 40px;
+  margin-top: 20px;
   margin-bottom: 4px;
 }
 
@@ -225,7 +230,7 @@ canvas {
   font-size: clamp(0.85rem, 3.5vw, 1.05rem);
   line-height: 1.9;
   max-width: 540px;
-  margin: 0 auto 0;
+  margin: 0 auto;
   padding: 18px 20px;
   background: linear-gradient(135deg, rgba(245,166,35,0.06), rgba(192,57,43,0.06));
   border-top: 1px solid #f5a62333;
@@ -240,10 +245,11 @@ canvas {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  padding: 20px 16px 40px;
+  padding: 20px 16px 60px;
   pointer-events: auto;
   min-height: 100vh;
   justify-content: center;
+  background: #0a0005;
 }
 
 #progress-wrap { text-align: center; width: 100%; }
