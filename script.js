@@ -125,67 +125,136 @@ let diyaLit = false;
 function makeBigDiya(lit) {
   const ns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('viewBox', '0 0 120 150');
-  svg.setAttribute('width', '200');
-  svg.setAttribute('height', '250');
+  svg.setAttribute('viewBox', '0 0 160 200');
+  svg.setAttribute('width', '220');
+  svg.setAttribute('height', '275');
 
-  const bowl = document.createElementNS(ns, 'path');
-  bowl.setAttribute('d', 'M18,84 Q60,114 102,84 L90,102 Q60,126 30,102 Z');
-  bowl.setAttribute('fill', lit ? '#c0392b' : '#4a1a00');
-  svg.appendChild(bowl);
+  // glow halo behind diya
+  if (lit) {
+    const halo = document.createElementNS(ns, 'ellipse');
+    halo.setAttribute('cx','80'); halo.setAttribute('cy','120');
+    halo.setAttribute('rx','70'); halo.setAttribute('ry','50');
+    halo.setAttribute('fill','#f5a623');
+    halo.setAttribute('opacity','0.07');
+    const aH = document.createElementNS(ns, 'animate');
+    aH.setAttribute('attributeName','opacity');
+    aH.setAttribute('values','0.07;0.16;0.07');
+    aH.setAttribute('dur','1.8s'); aH.setAttribute('repeatCount','indefinite');
+    halo.appendChild(aH);
+    svg.appendChild(halo);
+  }
 
-  const shine = document.createElementNS(ns, 'ellipse');
-  shine.setAttribute('cx', '60'); shine.setAttribute('cy', '90');
-  shine.setAttribute('rx', '30'); shine.setAttribute('ry', '8');
-  shine.setAttribute('fill', lit ? '#e74c3c' : '#6b2800');
-  shine.setAttribute('opacity', '0.5');
-  svg.appendChild(shine);
+  // diya base shadow
+  const shadow = document.createElementNS(ns, 'ellipse');
+  shadow.setAttribute('cx','80'); shadow.setAttribute('cy','168');
+  shadow.setAttribute('rx','44'); shadow.setAttribute('ry','8');
+  shadow.setAttribute('fill','#000'); shadow.setAttribute('opacity','0.35');
+  svg.appendChild(shadow);
 
-  const wick = document.createElementNS(ns, 'line');
-  wick.setAttribute('x1', '60'); wick.setAttribute('y1', '84');
-  wick.setAttribute('x2', '60'); wick.setAttribute('y2', '66');
-  wick.setAttribute('stroke', lit ? '#7f4f00' : '#3a2800');
-  wick.setAttribute('stroke-width', '3');
+  // outer bowl — rich terracotta
+  const bowlOuter = document.createElementNS(ns, 'path');
+  bowlOuter.setAttribute('d','M28,118 Q80,158 132,118 L118,142 Q80,172 42,142 Z');
+  bowlOuter.setAttribute('fill', lit ? '#b5451b' : '#3d1200');
+  svg.appendChild(bowlOuter);
+
+  // bowl rim highlight
+  const rim = document.createElementNS(ns, 'path');
+  rim.setAttribute('d','M28,118 Q80,104 132,118');
+  rim.setAttribute('fill','none');
+  rim.setAttribute('stroke', lit ? '#e8845a' : '#5a2200');
+  rim.setAttribute('stroke-width','4');
+  rim.setAttribute('stroke-linecap','round');
+  svg.appendChild(rim);
+
+  // inner bowl depth
+  const bowlInner = document.createElementNS(ns, 'ellipse');
+  bowlInner.setAttribute('cx','80'); bowlInner.setAttribute('cy','118');
+  bowlInner.setAttribute('rx','38'); bowlInner.setAttribute('ry','10');
+  bowlInner.setAttribute('fill', lit ? '#8b2e0a' : '#2a0d00');
+  svg.appendChild(bowlInner);
+
+  // oil surface shimmer
+  const oil = document.createElementNS(ns, 'ellipse');
+  oil.setAttribute('cx','80'); oil.setAttribute('cy','118');
+  oil.setAttribute('rx','28'); oil.setAttribute('ry','6');
+  oil.setAttribute('fill', lit ? '#d4691e' : '#1e0900');
+  oil.setAttribute('opacity','0.8');
+  svg.appendChild(oil);
+
+  // spout
+  const spout = document.createElementNS(ns, 'path');
+  spout.setAttribute('d','M108,118 Q128,112 134,106 Q130,116 132,118');
+  spout.setAttribute('fill', lit ? '#b5451b' : '#3d1200');
+  svg.appendChild(spout);
+
+  // decorative dots on bowl
+  [[42,136],[56,150],[80,158],[104,150],[118,136]].forEach(([cx,cy]) => {
+    const dot = document.createElementNS(ns, 'circle');
+    dot.setAttribute('cx', cx); dot.setAttribute('cy', cy);
+    dot.setAttribute('r','2.5');
+    dot.setAttribute('fill', lit ? '#e8845a' : '#5a2200');
+    dot.setAttribute('opacity','0.7');
+    svg.appendChild(dot);
+  });
+
+  // wick
+  const wick = document.createElementNS(ns, 'path');
+  wick.setAttribute('d','M80,118 Q82,108 80,96');
+  wick.setAttribute('fill','none');
+  wick.setAttribute('stroke', lit ? '#8b5e00' : '#2a1800');
+  wick.setAttribute('stroke-width','2.5');
+  wick.setAttribute('stroke-linecap','round');
   svg.appendChild(wick);
 
-  const flameOuter = document.createElementNS(ns, 'ellipse');
-  flameOuter.setAttribute('cx', '60'); flameOuter.setAttribute('cy', '48');
-  flameOuter.setAttribute('rx', '15'); flameOuter.setAttribute('ry', '24');
-  flameOuter.setAttribute('fill', '#f5a623');
-  flameOuter.setAttribute('opacity', lit ? '1' : '0');
-  const animO = document.createElementNS(ns, 'animateTransform');
-  animO.setAttribute('attributeName', 'transform'); animO.setAttribute('type', 'scale');
-  animO.setAttribute('values', '1 1;1.1 0.92;0.93 1.08;1 1');
-  animO.setAttribute('dur', '1.4s'); animO.setAttribute('repeatCount', 'indefinite');
-  animO.setAttribute('additive', 'sum');
-  flameOuter.appendChild(animO);
-  svg.appendChild(flameOuter);
+  // ── FLAME (only when lit) ──
+  if (lit) {
+    // outer flame
+    const f1 = document.createElementNS(ns, 'ellipse');
+    f1.setAttribute('cx','80'); f1.setAttribute('cy','72');
+    f1.setAttribute('rx','18'); f1.setAttribute('ry','30');
+    f1.setAttribute('fill','#f5a623');
+    const a1 = document.createElementNS(ns, 'animateTransform');
+    a1.setAttribute('attributeName','transform'); a1.setAttribute('type','scale');
+    a1.setAttribute('values','1 1;1.12 0.9;0.9 1.1;1.05 0.95;1 1');
+    a1.setAttribute('dur','1.2s'); a1.setAttribute('repeatCount','indefinite');
+    a1.setAttribute('additive','sum');
+    f1.appendChild(a1);
+    svg.appendChild(f1);
 
-  const flameMid = document.createElementNS(ns, 'ellipse');
-  flameMid.setAttribute('cx', '60'); flameMid.setAttribute('cy', '50');
-  flameMid.setAttribute('rx', '9'); flameMid.setAttribute('ry', '18');
-  flameMid.setAttribute('fill', '#ffb347');
-  flameMid.setAttribute('opacity', lit ? '1' : '0');
-  svg.appendChild(flameMid);
+    // mid flame
+    const f2 = document.createElementNS(ns, 'ellipse');
+    f2.setAttribute('cx','80'); f2.setAttribute('cy','76');
+    f2.setAttribute('rx','11'); f2.setAttribute('ry','22');
+    f2.setAttribute('fill','#ffb347');
+    svg.appendChild(f2);
 
-  const flameInner = document.createElementNS(ns, 'ellipse');
-  flameInner.setAttribute('cx', '60'); flameInner.setAttribute('cy', '54');
-  flameInner.setAttribute('rx', '5'); flameInner.setAttribute('ry', '12');
-  flameInner.setAttribute('fill', '#fff8e1');
-  flameInner.setAttribute('opacity', lit ? '1' : '0');
-  svg.appendChild(flameInner);
+    // inner flame
+    const f3 = document.createElementNS(ns, 'ellipse');
+    f3.setAttribute('cx','80'); f3.setAttribute('cy','82');
+    f3.setAttribute('rx','6'); f3.setAttribute('ry','14');
+    f3.setAttribute('fill','#fff0a0');
+    svg.appendChild(f3);
 
-  const glow = document.createElementNS(ns, 'ellipse');
-  glow.setAttribute('cx', '60'); glow.setAttribute('cy', '48');
-  glow.setAttribute('rx', '26'); glow.setAttribute('ry', '30');
-  glow.setAttribute('fill', '#f5a623');
-  glow.setAttribute('opacity', lit ? '0.15' : '0');
-  const animG = document.createElementNS(ns, 'animate');
-  animG.setAttribute('attributeName', 'opacity');
-  animG.setAttribute('values', '0.15;0.28;0.08;0.15');
-  animG.setAttribute('dur', '1.4s'); animG.setAttribute('repeatCount', 'indefinite');
-  glow.appendChild(animG);
-  svg.appendChild(glow);
+    // flame tip
+    const f4 = document.createElementNS(ns, 'ellipse');
+    f4.setAttribute('cx','80'); f4.setAttribute('cy','88');
+    f4.setAttribute('rx','3'); f4.setAttribute('ry','7');
+    f4.setAttribute('fill','#ffffff');
+    f4.setAttribute('opacity','0.85');
+    svg.appendChild(f4);
+
+    // glow around flame
+    const fg = document.createElementNS(ns, 'ellipse');
+    fg.setAttribute('cx','80'); fg.setAttribute('cy','72');
+    fg.setAttribute('rx','32'); fg.setAttribute('ry','40');
+    fg.setAttribute('fill','#f5a623'); fg.setAttribute('opacity','0.12');
+    const ag = document.createElementNS(ns, 'animate');
+    ag.setAttribute('attributeName','opacity');
+    ag.setAttribute('values','0.12;0.22;0.08;0.18;0.12');
+    ag.setAttribute('dur','1.2s'); ag.setAttribute('repeatCount','indefinite');
+    fg.appendChild(ag);
+    svg.insertBefore(fg, f1); // behind flame
+  }
 
   return svg;
 }
