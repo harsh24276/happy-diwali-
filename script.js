@@ -276,13 +276,18 @@ function spawnRocket() {
   const rect = diyaSection.getBoundingClientRect();
   if (rect.top > window.innerHeight * 0.5) return; // spawn only when diya section is mostly visible
 
+  const diyaEl = document.getElementById('big-diya');
+  const diyaRect = diyaEl.getBoundingClientRect();
+  const diyaCenterX = diyaRect.left + diyaRect.width / 2;
+  const diyaBottomY = diyaRect.bottom;
+
   const wrap = document.createElement('div');
   const dur = isMobile ? 5 + Math.random() * 4 : 4 + Math.random() * 3;
-  const startX = 20 + Math.random() * (window.innerWidth - 40);
+  const startX = diyaCenterX + (Math.random() - 0.5) * 40;
   Object.assign(wrap.style, {
     position: 'fixed',
     left: startX + 'px',
-    bottom: '0px',
+    top: diyaBottomY + 'px',
     zIndex: '6',
     pointerEvents: 'auto',
     cursor: 'pointer',

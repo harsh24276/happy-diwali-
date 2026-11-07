@@ -225,8 +225,6 @@ canvas {
   max-width: 540px;
   margin: 0 auto;
   padding: 18px 20px;
-  background: linear-gradient(135deg, rgba(245,166,35,0.06), rgba(192,57,43,0.06));
-  border-top: 1px solid #f5a62333;
   letter-spacing: 0.3px;
 }
 
@@ -241,7 +239,6 @@ canvas {
   pointer-events: auto;
   min-height: 100vh;
   justify-content: center;
-  background: #0a0005;
 }
 
 #progress-wrap { text-align: center; width: 100%; }
