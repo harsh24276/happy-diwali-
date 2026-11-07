@@ -289,101 +289,38 @@ document.getElementById('big-diya').addEventListener('click', () => {
   if (!animating) { animating = true; animateFw(); }
 });
 
-// ── Rocket Crackers ───────────────────────────────────────────
-function makeRocketSVG() {
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('viewBox', '0 0 20 48');
-  svg.setAttribute('width', '20');
-  svg.setAttribute('height', '48');
-  const color = Math.random() > 0.5 ? '#c0392b' : '#8e1a00';
-
-  const body = document.createElementNS(ns, 'rect');
-  body.setAttribute('x','5'); body.setAttribute('y','14');
-  body.setAttribute('width','10'); body.setAttribute('height','22');
-  body.setAttribute('rx','2'); body.setAttribute('fill', color);
-  svg.appendChild(body);
-
-  const nose = document.createElementNS(ns, 'polygon');
-  nose.setAttribute('points','10,2 5,14 15,14');
-  nose.setAttribute('fill','#ffd700');
-  svg.appendChild(nose);
-
-  const finL = document.createElementNS(ns, 'polygon');
-  finL.setAttribute('points','5,28 0,38 5,36');
-  finL.setAttribute('fill','#f5a623');
-  svg.appendChild(finL);
-
-  const finR = document.createElementNS(ns, 'polygon');
-  finR.setAttribute('points','15,28 20,38 15,36');
-  finR.setAttribute('fill','#f5a623');
-  svg.appendChild(finR);
-
-  const flame = document.createElementNS(ns, 'ellipse');
-  flame.setAttribute('cx','10'); flame.setAttribute('cy','40');
-  flame.setAttribute('rx','3'); flame.setAttribute('ry','6');
-  flame.setAttribute('fill','#f5a623'); flame.setAttribute('opacity','0.8');
-  const animF = document.createElementNS(ns, 'animate');
-  animF.setAttribute('attributeName','opacity');
-  animF.setAttribute('values','0.8;0.2;0.8');
-  animF.setAttribute('dur','0.3s');
-  animF.setAttribute('repeatCount','indefinite');
-  flame.appendChild(animF);
-  svg.appendChild(flame);
-
-  const stick = document.createElementNS(ns, 'line');
-  stick.setAttribute('x1','10'); stick.setAttribute('y1','36');
-  stick.setAttribute('x2','10'); stick.setAttribute('y2','48');
-  stick.setAttribute('stroke','#7f4f00'); stick.setAttribute('stroke-width','1.5');
-  svg.appendChild(stick);
-
-  return svg;
-}
-
-function spawnRocket() {
-  const diyaSection = document.getElementById('diya-section');
-  if (!diyaSection || diyaSection.style.display === 'none') return;
-  const rect = diyaSection.getBoundingClientRect();
-  if (rect.top > window.innerHeight * 0.5) return; // spawn only when diya section is mostly visible
-
-  const diyaEl = document.getElementById('big-diya');
-  const diyaRect = diyaEl.getBoundingClientRect();
-  const diyaCenterX = diyaRect.left + diyaRect.width / 2;
-  const diyaBottomY = diyaRect.bottom;
-
-  const wrap = document.createElement('div');
-  const dur = isMobile ? 5 + Math.random() * 4 : 4 + Math.random() * 3;
-  const startX = diyaCenterX + (Math.random() - 0.5) * 40;
-  Object.assign(wrap.style, {
+// ── Ambient Sparkles (permanent, full page) ─────────────────
+function spawnAmbientSparkle() {
+  const s = document.createElement('div');
+  const size = 2 + Math.random() * 4;
+  const colors = ['#ffd700','#f5a623','#ff6b6b','#fff8e1','#ffb347','#e91e8c','#54a0ff','#00d2d3'];
+  const x = Math.random() * window.innerWidth;
+  const y = Math.random() * window.innerHeight;
+  Object.assign(s.style, {
     position: 'fixed',
-    left: startX + 'px',
-    top: diyaBottomY + 'px',
-    zIndex: '6',
-    pointerEvents: 'auto',
-    cursor: 'pointer',
-    animation: `rocketUp ${dur}s linear forwards`,
+    borderRadius: '50%',
+    pointerEvents: 'none',
+    zIndex: '5',
+    width: size + 'px',
+    height: size + 'px',
+    background: colors[Math.floor(Math.random() * colors.length)],
+    left: x + 'px',
+    top: y + 'px',
+    opacity: '0',
+    boxShadow: `0 0 ${size * 2}px currentColor`,
+    transition: 'opacity 0.4s ease',
   });
-  wrap.appendChild(makeRocketSVG());
-  document.body.appendChild(wrap);
-  wrap.addEventListener('click', () => {
-    const r = wrap.getBoundingClientRect();
-    explode(r.left + r.width / 2, r.top + r.height / 2, isMobile ? 40 : 80);
-    if (!animating) { animating = true; animateFw(); }
-    wrap.remove();
-  });
-  setTimeout(() => wrap.remove(), dur * 1000);
+  document.body.appendChild(s);
+  requestAnimationFrame(() => s.style.opacity = (0.5 + Math.random() * 0.5).toString());
+  setTimeout(() => {
+    s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    s.style.opacity = '0';
+    s.style.transform = `translate(${(Math.random()-0.5)*30}px, ${-20-Math.random()*30}px) scale(0)`;
+    setTimeout(() => s.remove(), 650);
+  }, 400 + Math.random() * 600);
 }
 
-const kf = document.createElement('style');
-kf.textContent = `@keyframes rocketUp {
-  0%   { transform: translateY(0) rotate(-3deg); opacity: 1; }
-  50%  { transform: translateY(-55vh) rotate(3deg); opacity: 1; }
-  100% { transform: translateY(-115vh) rotate(-2deg); opacity: 0; }
-}`;
-document.head.appendChild(kf);
-
-setInterval(spawnRocket, isMobile ? 3000 : 1800);
-// Don't spawn on load — wait for diya section to be visible
+setInterval(spawnAmbientSparkle, isMobile ? 120 : 60);
 
 // ── Popup / Greet ─────────────────────────────────────────────
 let userName = '';
