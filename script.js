@@ -118,9 +118,8 @@ window.addEventListener('resize', resizeBg);
 
 // ── Big Diya + Progress Bar ───────────────────────────────────
 const TOTAL = 360;
-let litCount = 0;
-localStorage.setItem('diyaCount', '0');
-let diyaLit = false;
+let litCount = parseInt(localStorage.getItem('diyaCount') || '0');
+let diyaLit = localStorage.getItem('deviceLit') === 'true';
 
 function makeBigDiya(lit) {
   const ns = 'http://www.w3.org/2000/svg';
@@ -275,7 +274,7 @@ function updateProgress() {
 }
 
 function initDiya() {
-  setDiyaLit(false);
+  setDiyaLit(diyaLit);
   updateProgress();
 }
 
@@ -283,6 +282,8 @@ document.getElementById('big-diya').addEventListener('click', () => {
   if (diyaLit) return;
   litCount = Math.min(litCount + 1, TOTAL);
   localStorage.setItem('diyaCount', litCount);
+  localStorage.setItem('deviceLit', 'true');
+  diyaLit = true;
   setDiyaLit(true);
   updateProgress();
   explode(innerWidth / 2, innerHeight * 0.6, 60);
