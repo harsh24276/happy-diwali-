@@ -116,9 +116,7 @@ function drawRangoli(ctx, cx, cy, r, t) {
 resizeBg();
 window.addEventListener('resize', resizeBg);
 
-// ── Big Diya + Progress Bar ───────────────────────────────────
-const TOTAL = 360;
-let litCount = parseInt(localStorage.getItem('diyaCount') || '0');
+// ── Big Diya ───────────────────────────────────────────────────
 let diyaLit = localStorage.getItem('deviceLit') === 'true';
 
 function makeBigDiya(lit) {
@@ -267,25 +265,15 @@ function setDiyaLit(lit) {
   document.getElementById('diya-hint').style.opacity = lit ? '0' : '1';
 }
 
-function updateProgress() {
-  const pct = Math.min((litCount / TOTAL) * 100, 100);
-  document.getElementById('progress-bar').style.width = pct + '%';
-  document.getElementById('lit-count').textContent = litCount;
-}
-
 function initDiya() {
   setDiyaLit(diyaLit);
-  updateProgress();
 }
 
 document.getElementById('big-diya').addEventListener('click', () => {
   if (diyaLit) return;
-  litCount = Math.min(litCount + 1, TOTAL);
-  localStorage.setItem('diyaCount', litCount);
   localStorage.setItem('deviceLit', 'true');
   diyaLit = true;
   setDiyaLit(true);
-  updateProgress();
   explode(innerWidth / 2, innerHeight * 0.6, 60);
   if (!animating) { animating = true; animateFw(); }
 });

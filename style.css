@@ -252,46 +252,6 @@ canvas {
   background: transparent;
 }
 
-#progress-wrap {
-  text-align: center;
-  width: 100%;
-  animation: fadeUp 0.6s ease both;
-}
-
-#progress-label {
-  color: #f5a623bb;
-  font-size: 0.82rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  text-shadow: 0 0 10px #f5a62344;
-}
-#progress-label span {
-  color: #ffd700;
-  font-size: 1.1rem;
-  font-weight: bold;
-  text-shadow: 0 0 16px #ffd700cc;
-}
-
-#progress-track {
-  width: min(340px, 88vw);
-  height: 12px;
-  background: rgba(245,166,35,0.08);
-  border-radius: 12px;
-  border: 1px solid #f5a62344;
-  overflow: hidden;
-  margin: 0 auto;
-  box-shadow: 0 0 12px #f5a62322;
-}
-#progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #c0392b, #e67e22, #f5a623, #ffd700);
-  border-radius: 12px;
-  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
-  box-shadow: 0 0 14px #f5a623, 0 0 28px #f5a62366, 0 0 4px #fff8e188;
-}
-
 #big-diya {
   cursor: pointer;
   filter: drop-shadow(0 0 4px #f5a62344);
