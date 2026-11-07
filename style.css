@@ -182,14 +182,7 @@ canvas {
   text-decoration: none;
   animation: bounce 2s infinite;
 }
-.scroll-hint::after {
-  content: '';
-  display: block;
-  margin: 8px auto 0;
-  width: 1px;
-  height: 36px;
-  background: linear-gradient(to bottom, #f5a623, transparent);
-}
+
 @keyframes bounce {
   0%, 100% { transform: translateY(0); opacity: 0.5; }
   50%       { transform: translateY(6px); opacity: 1; }
@@ -234,7 +227,6 @@ canvas {
   padding: 18px 20px;
   background: linear-gradient(135deg, rgba(245,166,35,0.06), rgba(192,57,43,0.06));
   border-top: 1px solid #f5a62333;
-  border-bottom: 1px solid #f5a62333;
   letter-spacing: 0.3px;
 }
 
