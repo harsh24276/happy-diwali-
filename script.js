@@ -231,9 +231,11 @@ function updateProgress() {
   document.getElementById('lit-count').textContent = litCount;
 }
 
-// Init
-setDiyaLit(false);
-updateProgress();
+// Init deferred — called after greet()
+function initDiya() {
+  setDiyaLit(false);
+  updateProgress();
+}
 
 document.getElementById('big-diya').addEventListener('click', () => {
   if (diyaLit) return; // already lit by this user, do nothing
@@ -344,6 +346,7 @@ function greet() {
   document.getElementById('typeMsg').textContent = '';
   document.getElementById('greeting').style.display = 'flex';
   document.getElementById('diya-section').style.display = 'flex';
+  initDiya();
   typeWriter('displayName', name, 65);
   const msg = messages[Math.floor(Math.random() * messages.length)];
   setTimeout(() => typeWriter('typeMsg', msg, 26), name.length * 65 + 300);
