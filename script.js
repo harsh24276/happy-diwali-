@@ -342,6 +342,7 @@ function greet() {
   document.getElementById('displayName').textContent = '';
   document.getElementById('typeMsg').textContent = '';
   document.getElementById('greeting').style.display = 'flex';
+  document.getElementById('diya-section').style.display = 'flex';
   typeWriter('displayName', name, 65);
   const msg = messages[Math.floor(Math.random() * messages.length)];
   setTimeout(() => typeWriter('typeMsg', msg, 26), name.length * 65 + 300);
