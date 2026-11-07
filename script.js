@@ -1,10 +1,15 @@
+// ── Mobile detection ─────────────────────────────────────────
+const isMobile = /Mobi|Android/i.test(navigator.userAgent) || innerWidth < 600;
+
 // ── Cursor ────────────────────────────────────────────────────
 const cursorEl = document.getElementById('cursor');
-document.addEventListener('mousemove', e => {
-  cursorEl.style.left = e.clientX + 'px';
-  cursorEl.style.top  = e.clientY + 'px';
-  spawnSparkle(e.clientX, e.clientY);
-});
+if (!isMobile) {
+  document.addEventListener('mousemove', e => {
+    cursorEl.style.left = e.clientX + 'px';
+    cursorEl.style.top  = e.clientY + 'px';
+    spawnSparkle(e.clientX, e.clientY);
+  });
+}
 
 function spawnSparkle(x, y) {
   const s = document.createElement('div');
@@ -33,7 +38,8 @@ const bgCtx    = bgCanvas.getContext('2d');
 
 function resizeBg() { bgCanvas.width = innerWidth; bgCanvas.height = innerHeight; drawBg(); }
 
-const stars = Array.from({length: 180}, () => ({
+const starCount = isMobile ? 60 : 180;
+const stars = Array.from({length: starCount}, () => ({
   x: Math.random(), y: Math.random(),
   r: 0.4 + Math.random() * 1.4,
   a: 0.3 + Math.random() * 0.7,
@@ -42,10 +48,13 @@ const stars = Array.from({length: 180}, () => ({
 }));
 
 let bgTick = 0;
-function drawBg() {
+let lastBgFrame = 0;
+function drawBg(ts) {
+  if (isMobile && ts - lastBgFrame < 50) { requestAnimationFrame(drawBg); return; } // 20fps on mobile
+  lastBgFrame = ts;
   const W = bgCanvas.width, H = bgCanvas.height;
   bgCtx.clearRect(0, 0, W, H);
-  bgTick += 0.02;
+  bgTick += isMobile ? 0.04 : 0.02;
 
   // Stars
   stars.forEach(s => {
@@ -65,6 +74,7 @@ function drawBg() {
 }
 
 function drawRangoli(ctx, cx, cy, r, t) {
+  if (isMobile) return; // skip rangoli on mobile
   const petalColors = ['#f5a623','#ff6b6b','#ffd700','#e91e8c','#54a0ff','#00d2d3'];
   ctx.save();
   ctx.translate(cx, cy);
@@ -308,8 +318,8 @@ kf.textContent = `
   }`;
 document.head.appendChild(kf);
 
-setInterval(spawnLantern, 2000);
-spawnLantern();
+setInterval(spawnLantern, isMobile ? 6000 : 2000);
+if (!isMobile) spawnLantern();
 
 // ── Popup / Greet ─────────────────────────────────────────────
 let userName = '';
@@ -367,7 +377,7 @@ window.addEventListener('resize', resizeFw);
 const fwColors = ['#f5a623','#ff6b6b','#ffd700','#ffb347','#e91e8c','#54a0ff','#00d2d3','#c0392b'];
 
 function explode(x, y, count) {
-  count = count || 90;
+  count = isMobile ? Math.floor((count || 90) * 0.4) : (count || 90);
   for (let i = 0; i < count; i++) {
     const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.3;
     const speed = 1.5 + Math.random() * 5;
@@ -379,7 +389,7 @@ function explode(x, y, count) {
       color: fwColors[Math.floor(Math.random() * fwColors.length)],
       size: 1.5 + Math.random() * 2.5,
       trail: [],
-      shape: Math.random() > 0.7 ? 'star' : 'circle'
+      shape: 'circle'
     });
   }
 }
@@ -398,40 +408,33 @@ function drawStar(ctx, x, y, r) {
 
 function animateFw() {
   if (!animating) return;
-  fwCtx.fillStyle = 'rgba(10,0,5,0.15)';
+  fwCtx.fillStyle = 'rgba(10,0,5,0.18)';
   fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
 
   particles = particles.filter(p => p.alpha > 0.02);
   particles.forEach(p => {
-    p.trail.push({ x: p.x, y: p.y, a: p.alpha });
-    if (p.trail.length > 6) p.trail.shift();
-
-    p.trail.forEach((t, i) => {
-      fwCtx.globalAlpha = t.a * (i / p.trail.length) * 0.35;
-      fwCtx.fillStyle = p.color;
-      fwCtx.beginPath();
-      fwCtx.arc(t.x, t.y, p.size * 0.5, 0, Math.PI * 2);
-      fwCtx.fill();
-    });
-
+    if (!isMobile) {
+      p.trail.push({ x: p.x, y: p.y, a: p.alpha });
+      if (p.trail.length > 4) p.trail.shift();
+      p.trail.forEach((t, i) => {
+        fwCtx.globalAlpha = t.a * (i / p.trail.length) * 0.3;
+        fwCtx.fillStyle = p.color;
+        fwCtx.beginPath();
+        fwCtx.arc(t.x, t.y, p.size * 0.5, 0, Math.PI * 2);
+        fwCtx.fill();
+      });
+    }
     p.x += p.vx; p.y += p.vy;
     p.vy += 0.055; p.vx *= 0.99;
-    p.alpha -= 0.012;
-
+    p.alpha -= isMobile ? 0.022 : 0.012;
     fwCtx.globalAlpha = p.alpha;
     fwCtx.fillStyle = p.color;
-    fwCtx.shadowBlur = 10;
-    fwCtx.shadowColor = p.color;
-
-    if (p.shape === 'star') drawStar(fwCtx, p.x, p.y, p.size * 1.4);
-    else {
-      fwCtx.beginPath();
-      fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      fwCtx.fill();
-    }
+    if (!isMobile) { fwCtx.shadowBlur = 8; fwCtx.shadowColor = p.color; }
+    fwCtx.beginPath();
+    fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    fwCtx.fill();
     fwCtx.shadowBlur = 0;
   });
-
   fwCtx.globalAlpha = 1;
   requestAnimationFrame(animateFw);
 }
@@ -440,14 +443,17 @@ function launchFireworks() {
   animating = true;
   animateFw();
   let count = 0;
+  const total = isMobile ? 6 : 24;
+  const interval = isMobile ? 500 : 320;
   const iv = setInterval(() => {
     explode(
       80 + Math.random() * (fwCanvas.width - 160),
       60 + Math.random() * (fwCanvas.height * 0.6)
     );
-    if (++count >= 24) clearInterval(iv);
-  }, 320);
-
-  fwCanvas.style.pointerEvents = 'auto';
-  fwCanvas.addEventListener('click', e => explode(e.clientX, e.clientY, 75));
+    if (++count >= total) clearInterval(iv);
+  }, interval);
+  if (!isMobile) {
+    fwCanvas.style.pointerEvents = 'auto';
+    fwCanvas.addEventListener('click', e => explode(e.clientX, e.clientY, 75));
+  }
 }
