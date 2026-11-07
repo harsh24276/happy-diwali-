@@ -158,10 +158,10 @@ canvas {
   min-height: 100vh;
   display: none;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 40px 16px 20px;
+  padding: 16px 16px 20px;
   animation: fadeUp 0.8s ease both;
 }
 .scroll-hint {
