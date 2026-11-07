@@ -339,6 +339,7 @@ function greet() {
   }
   userName = name;
   document.getElementById('popup').style.display = 'none';
+  document.getElementById('page').style.display = 'flex';
   document.getElementById('displayName').textContent = '';
   document.getElementById('typeMsg').textContent = '';
   document.getElementById('greeting').style.display = 'flex';
