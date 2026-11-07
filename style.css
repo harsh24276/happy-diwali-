@@ -239,6 +239,7 @@ canvas {
   pointer-events: auto;
   min-height: 100vh;
   justify-content: center;
+  background: transparent;
 }
 
 #progress-wrap { text-align: center; width: 100%; }
